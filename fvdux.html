@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -5,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My emotional support backpack has little surprise</title>
 
-<style>
+  <style>
     body {
       background-color: #000;
       margin: 0;
@@ -13,7 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       font-family: sans-serif;
     }
 
@@ -23,30 +24,51 @@
     }
 
     video {
+      display: block;
       width: 100%;
       border-radius: 10px;
     }
   </style>
-</head>
+
+  <!-- Script iklan yang sudah ada -->
   <script src="https://debutpoignantsudden.com/e9/97/7c/e9977c57e62e4129f308f4839fbdc394.js"></script>
 </head>
 
 <body>
 
-<div class="video-container">
-    <video controls playsinline>
-        <source src="https://porto2.nebula.to/d69/Spider-Man.Brand.New.Day.2026.V3.1080p.TELESYNC.x264-DKS.WT11.mp4?md5=4OBHpuaRhNp_UykqPMnnxQ&expires=1786501497&fn=1c24a3655b32f3a5267f811e86d46c4428a81a1c.mp4" type="video/mp4">
+  <div class="video-container">
+    <video id="videoPlayer" controls playsinline>
+      <source
+        src="https://porto2.nebula.to/d69/Spider-Man.Brand.New.Day.2026.V3.1080p.TELESYNC.x264-DKS.WT11.mp4?md5=4OBHpuaRhNp_UykqPMnnxQ&expires=1786501497&fn=1c24a3655b32f3a5267f811e86d46c4428a81a1c.mp4"
+        type="video/mp4"
+      >
+      Browser Anda tidak mendukung pemutaran video.
     </video>
-</div>
-<!-- Histats.com  START  (aync)-->
-<script type="text/javascript">var _Hasync= _Hasync|| [];
-_Hasync.push(['Histats.start', '1,4425861,4,0,0,0,00010000']);
-_Hasync.push(['Histats.fasi', '1']);
-_Hasync.push(['Histats.track_hits', '']);
-(function() {
-var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
-hs.src = ('//s10.histats.com/js15_as.js');
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
-})();</script>
-<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4425861&101" alt="" border="0"></a></noscript>
-<!-- Histats.com  END  -->
+  </div>
+
+  <script>
+    const video = document.getElementById("videoPlayer");
+
+    // Link yang akan dibuka ketika Play ditekan
+    const adUrl = "https://buddie.fun/fvdux";
+
+    // Agar iklan hanya dibuka satu kali per halaman
+    let adOpened = false;
+
+    video.addEventListener("play", function () {
+      if (!adOpened) {
+        adOpened = true;
+
+        // Buka iklan di tab baru
+        window.open(
+          adUrl,
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
+    });
+  </script>
+
+</body>
+</html>
+```
