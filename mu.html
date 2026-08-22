@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spider-Man.Brand.New.Day.2026.V3.1080p.TELESYNC.x264-DKS.WT11</title>
+  <title>Example</title>
 
   <style>
     body {
@@ -27,6 +27,19 @@
       width: 100%;
       border-radius: 10px;
     }
+
+    .iframe-container {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .iframe-container iframe {
+      display: block;
+      width: 100%;
+      height: 480px;
+      border: 0;
+      border-radius: 10px;
+    }
   </style>
 
 </head>
@@ -36,11 +49,23 @@
   <div class="video-container">
     <video id="videoPlayer" controls playsinline>
       <source
-        src="https://embedindia.st/embed/pl/2026-08-22/hul-mun"
+        src="https://vz-bcb70d21-51f.b-cdn.net/bd8f6d55-b76e-40c7-a30d-90ab14a8618b/playlist.m3u8"
         type="video/mp4"
       >
       Browser Anda tidak mendukung pemutaran video.
     </video>
+
+    <!-- Iframe embed di bawah video -->
+    <div class="iframe-container">
+      <iframe
+        src="https://embedindia.st/embed/pl/2026-08-22/hul-mun"
+        width="100%"
+        height="480"
+        frameborder="0"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
   </div>
 
   <script>
