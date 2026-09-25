@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Nonton Video — Video Player</title>
+<meta name="description" content="Tonton video full HD langsung dari browser Anda. Player ringan, cepat, tanpa iklan."/>
+<meta name="robots" content="index, follow"/>
+<meta name="theme-color" content="#002A91"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400..800&family=Barlow:wght@400..700&display=swap" rel="stylesheet"/>
+
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--red:#E4002B;--ink:#0a0d17}
+  body{
+    font-family:'Barlow',sans-serif;color:var(--ink);line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    background:#0a0d17;
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:20px;
+  }
+
+  /* ---- player (gaya identik dengan referensi) ---- */
+  .player-outer{
+    position:relative;width:min(1024px,100%);aspect-ratio:16/9;
+    background:#000;border-radius:4px;overflow:hidden;
+    box-shadow:0 18px 44px -18px rgba(0,0,0,.8);
+  }
+  .player-outer video{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+  .vp-controls{
+    position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:4px;
+    padding:8px 12px;background:linear-gradient(transparent,rgba(0,0,0,.78));
+    opacity:1;transition:opacity .3s;
+  }
+  .player-outer.playing .vp-controls{opacity:0}
+  .player-outer.playing:hover .vp-controls{opacity:1}
+  .vp-btn{background:none;border:0;color:#fff;cursor:pointer;padding:8px;display:grid;place-items:center}
+  .vp-btn:hover{color:var(--red)}
+  .vp-time{color:#dfe3ec;font-size:.8rem;font-variant-numeric:tabular-nums;padding:0 8px;white-space:nowrap}
+  .vp-track{position:relative;flex:1;height:22px;display:flex;align-items:center;cursor:pointer}
+  .vp-track::before{content:"";position:absolute;left:0;right:0;height:4px;background:rgba(255,255,255,.3);border-radius:2px}
+  .vp-fill{position:absolute;left:0;height:4px;background:var(--red);border-radius:2px;width:0}
+  .play-overlay{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;
+    background:rgba(4,6,14,.45);border:0;cursor:pointer;color:#fff;
+    transition:background .25s;
+  }
+  .play-overlay:hover{background:rgba(4,6,14,.3)}
+  .play-overlay .big{
+    width:78px;height:78px;border-radius:50%;background:var(--red);
+    display:grid;place-items:center;transition:transform .25s;
+  }
+  .play-overlay:hover .big{transform:scale(1.08)}
+  .play-overlay .lbl{
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;
+    letter-spacing:.18em;text-transform:uppercase;font-size:.85rem;
+    text-shadow:0 2px 10px rgba(0,0,0,.6);
+  }
+</style>
+</head>
+<body>
+
+<div class="player-outer" id="player">
+  <!-- Ganti poster & src di bawah dengan video Anda sendiri (mp4) -->
+  <video id="video" playsinline preload="metadata"
+         poster="https://cdn.jsdelivr.net/gh/hylooks/cms3@main/1790330365259.png"></video>
+
+  <button class="play-overlay" id="bigPlay" aria-label="Play video">
+    <span class="big">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="#fff" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+    </span>
+    <span class="lbl">Play Video</span>
+  </button>
+
+  <div class="vp-controls">
+    <button class="vp-btn" id="playBtn" aria-label="Putar / Jeda">
+      <svg id="icPlay" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="icPause" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+    </button>
+    <span class="vp-time" id="timeLabel">00:00 / 00:00</span>
+    <div class="vp-track" id="track"><div class="vp-fill" id="fill"></div></div>
+    <button class="vp-btn" id="muteBtn" aria-label="Bisukan">
+      <svg id="icVol" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+      <svg id="icMute" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display:none"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12a9 9 0 0 0-7-8.77v2.06A7 7 0 0 1 19 12zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>
+    </button>
+    <button class="vp-btn" id="fsBtn" aria-label="Layar penuh">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var v=document.getElementById('video'), player=document.getElementById('player'),
+      big=document.getElementById('bigPlay'), playBtn=document.getElementById('playBtn'),
+      icPlay=document.getElementById('icPlay'), icPause=document.getElementById('icPause'),
+      track=document.getElementById('track'), fill=document.getElementById('fill'),
+      timeLabel=document.getElementById('timeLabel');
+
+  var fmt=function(s){ if(!isFinite(s))return'00:00'; s=Math.floor(s);
+    var m=Math.floor(s/60); return (m<10?'0':'')+m+':'+(s%60<10?'0':'')+(s%60); };
+
+  function ui(playing){
+    icPlay.style.display  = playing?'none':'block';
+    icPause.style.display = playing?'block':'none';
+    big.style.display      = playing?'none':'flex';
+    player.classList.toggle('playing', playing);
+  }
+  var toggle=function(){ v.paused?v.play():v.pause(); };
+  big.addEventListener('click', function(){window.open('https://contoh.com/', '_blank');});
+  playBtn.addEventListener('click', function(){window.open('https://contoh.com/', '_blank');});
+  v.addEventListener('click', toggle);
+  v.addEventListener('play',  function(){ui(true);});
+  v.addEventListener('pause', function(){ui(false);});
+  v.addEventListener('ended', function(){ui(false);});
+  v.addEventListener('timeupdate', function(){
+    fill.style.width=((v.currentTime/v.duration)||0)*100+'%';
+    timeLabel.textContent=fmt(v.currentTime)+' / '+fmt(v.duration);
+  });
+  track.addEventListener('click', function(e){
+    var r=track.getBoundingClientRect();
+    if(isFinite(v.duration)) v.currentTime=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*v.duration;
+  });
+
+  document.getElementById('muteBtn').addEventListener('click', function(){
+    v.muted=!v.muted;
+    document.getElementById('icVol').style.display  = v.muted?'none':'block';
+    document.getElementById('icMute').style.display = v.muted?'block':'none';
+  });
+  document.getElementById('fsBtn').addEventListener('click', function(){
+    document.fullscreenElement?document.exitFullscreen():player.requestFullscreen&&player.requestFullscreen();
+  });
+
+  /* shortcut keyboard: Space/K = putar, ← → = seek 5 dtk, M = mute, F = fullscreen */
+  document.addEventListener('keydown', function(e){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+    if(e.key===' '||e.key==='k'){e.preventDefault();toggle();}
+    if(e.key==='ArrowRight') v.currentTime+=5;
+    if(e.key==='ArrowLeft')  v.currentTime=Math.max(0,v.currentTime-5);
+    if(e.key==='m') document.getElementById('muteBtn').click();
+    if(e.key==='f') document.getElementById('fsBtn').click();
+  });
+})();
+</script>
+</body>
+</html>
